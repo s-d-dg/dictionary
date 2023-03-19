@@ -4,6 +4,10 @@
 }
 
 .single-word {
+    display: flex;
+    align-items: center;
+    height: 2rem;
+    justify-content: center;
     margin: 0.5rem 30%;
     background-color: aquamarine;
     border: 1px solid green;
