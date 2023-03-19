@@ -1,10 +1,11 @@
 import styles from './App.module.css';
 import Content from './components/content/content';
+import Header from './components/header/header';
 
 function App() {
   return (
     <div className={styles.layout}>
-      <h1>Dictionary</h1>
+      <Header />
       <Content />
     </div>
   );
