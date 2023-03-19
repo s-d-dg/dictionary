@@ -9,6 +9,10 @@
   border-radius: 1rem;
 }
 
+.input-error {
+  border: 2px solid red;
+}
+
 .magnifying-glass {
   height: 100%;
   margin-left: 0.25rem;
@@ -29,4 +33,11 @@
   outline: none;
   border: none;
   border-radius: 1rem;
+}
+
+
+
+.error {
+  color: red;
+  font-size: large;
 }

@@ -15,7 +15,6 @@ const Dictionary = () => {
 
 
     const onChangeInput = useCallback((input: string) => {
-        // TODO validation input
         setPhrase(input);
     }, []);
 
