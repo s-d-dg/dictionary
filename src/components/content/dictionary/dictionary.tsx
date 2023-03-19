@@ -1,16 +1,17 @@
-import { useCallback, useDeferredValue, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useCallback, useDeferredValue, useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import SearchInput from "./searchInput/search-input";
-import WordList from "./wordListContainer/wordList/wordList";
+import WordList from "./wordList/wordList";
 import WordListContainer from "./wordListContainer/wordListContainer";
+import { allWordsActions } from '../../../store/dictionary';
 
 const Dictionary = () => {
     const [phrase, setPhrase] = useState('');
+    const dispatch = useDispatch();
 
-
-    const { words, loading, error } = useSelector(
-        (state: any) => state.dictionary
-    );
+    useEffect(() => {
+        dispatch(allWordsActions.filterBy(phrase));
+    }, [phrase]);
 
 
     const onChangeInput = useCallback((input: string) => {
@@ -20,7 +21,7 @@ const Dictionary = () => {
 
     return <>
         <SearchInput onChange={onChangeInput} />
-        <WordListContainer phrase={phrase} />
+        <WordListContainer />
     </>
 }
 

@@ -5,6 +5,9 @@ interface WordListPropTypes {
 }
 
 const WordList = ({ words, loading }: WordListPropTypes) => {
+
+    
+
     return <>
         {loading ? 'Loading....' :
             (<ul>

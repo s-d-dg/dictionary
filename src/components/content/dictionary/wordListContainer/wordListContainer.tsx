@@ -1,18 +1,20 @@
 import { useDeferredValue, useEffect } from "react";
+import { useSelector } from "react-redux";
+import WordList from "../wordList/wordList";
 
-interface WordListContainerPropTypes {
-    phrase: string
-}
+// interface WordListContainerPropTypes {
+//     phrase: string
+// }
 
 
-const WordListContainer = ({ phrase }: WordListContainerPropTypes) => {
-    // const deferredValue = useDeferredValue(phrase);
+const WordListContainer = () => {
+    const { loading, filteredWords } = useSelector(
+        (state: any) => state.dictionary
+    );
 
-    useEffect(() => {
-
-    }, [phrase]);
-
-    return <>Test</>
+    return <WordList
+        loading={loading}
+        words={filteredWords} />
 }
 
 export default WordListContainer;

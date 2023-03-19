@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AllWordsDictionary } from "./model";
+import { AllWordsDictionary, Dictionary, dictionaryObject } from "./model";
 
 const initialState: AllWordsDictionary = {
   loading: false,
-  words: [],
-  phrase: '',
-  filteredWords: []
+  dictionary: dictionaryObject(),
+  phrase: "",
+  filteredWords: [],
 };
 
 const DictionarySlice = createSlice({
@@ -15,13 +15,17 @@ const DictionarySlice = createSlice({
     loadWords(state) {
       state.loading = true;
     },
-    loadWordsSuccess(state, action: PayloadAction<string[]>) {
+    loadWordsSuccess(state, action: PayloadAction<Dictionary>) {
       state.loading = false;
-      state.words = action.payload;
+      state.dictionary = action.payload;
     },
     loadWordsFailure(state, action: PayloadAction<string>) {
       state.loading = false;
       state.error = action.payload;
+    },
+    filterBy(state, action: PayloadAction<string>) {
+      const phrase = action.payload;
+      state.filteredWords = filterBy(phrase, state.dictionary);
     },
   },
 });
@@ -29,3 +33,15 @@ const DictionarySlice = createSlice({
 export const allWordsActions = DictionarySlice.actions;
 
 export default DictionarySlice;
+
+
+
+function filterBy(phrase: string, dictionary: any): string[] {
+  if (phrase === "") {
+    return [];
+  }
+  const firstLetter = phrase.charAt(0);
+
+  const items = dictionary[`${firstLetter}`] as string[];
+  return items.filter((item) => item.includes(phrase));
+}

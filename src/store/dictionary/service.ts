@@ -1,35 +1,33 @@
 import { allWordsActions } from "./index";
 
 import wordsObj from "../../assets/data/words_dictionary.json";
-import { Dictionary } from "./model";
+import { Dictionary, dictionaryObject } from "./model";
 
-const getWords = async (): Promise<string[]> => {
+const getWords = async (): Promise<Dictionary> => {
   return new Promise((resolve, reject) => {
     try {
       const words = Object.keys(wordsObj);
-      // ----------- for future optimization ------------------
-      // const dictionaryObj = dictionaryObject();
-      // const start = Date.now();
-      // for (const word of words) {
-      //   if (!Object.keys(dictionaryObj).includes(word.charAt(0))) {
-      //     console.log(word);
-      //   } else {
-      //     dictionaryObj[`${word.charAt(0)}`].push(word);
-      //   }
-      // }
-      // const stop = Date.now();
-      // console.log(`miliseconds elapsed = ${Math.floor(stop - start)}`);
-      // console.log(dictionaryObj);
-      // ----------- for future optimization ------------------
+      const dictionaryObj = dictionaryObject();
 
-      resolve(words);
+      for (const word of words) {
+        // Just in case if list of words contains incorrect data
+        if (!Object.keys(dictionaryObj).includes(word.charAt(0))) {
+          console.error(`Dataset includes incorrect data: ${word}`);
+        } else {
+          // temporary 'optimization'
+          if (dictionaryObj[`${word.charAt(0)}`].length <= 500) {
+            dictionaryObj[`${word.charAt(0)}`].push(word);
+          }
+        }
+      }
+
+      resolve(dictionaryObj);
     } catch (error) {
       console.error(error);
       reject(new Error("Loading words failed !"));
     }
   });
 };
-
 
 export const loadAllWords = () => {
   return async (dispatch: any) => {
