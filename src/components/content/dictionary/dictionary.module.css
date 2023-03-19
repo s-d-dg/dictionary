@@ -1,0 +1,16 @@
+.loader-container {
+  height: 80vh;
+  margin-top: 3rem;
+  display: flex;
+  width: 90%;
+  align-items: center;
+  justify-content: center;
+}
+
+.results-container {
+  margin-top: 3rem;
+  align-items: center;
+  justify-content: center;
+  max-height: 70vh;
+  overflow-y: auto;
+}
