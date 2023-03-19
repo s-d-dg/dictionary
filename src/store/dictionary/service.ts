@@ -14,7 +14,9 @@ const getWords = async (): Promise<Dictionary> => {
         if (!Object.keys(dictionaryObj).includes(word.charAt(0))) {
           console.error(`Dataset includes incorrect data: ${word}`);
         } else {
-          dictionaryObj[`${word.charAt(0)}`].push(word);
+          if (dictionaryObj[`${word.charAt(0)}`].length <= 5000) {
+            dictionaryObj[`${word.charAt(0)}`].push(word);
+          }
         }
       }
 

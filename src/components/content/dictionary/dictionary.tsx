@@ -4,6 +4,8 @@ import SearchInput from "./searchInput/search-input";
 import WordList from "./wordList/wordList";
 import { allWordsActions } from '../../../store/dictionary';
 import { filterByPhrase } from "../../../store/dictionary/service";
+import Loader from "../../../ui/loader/loader";
+import styles from "./dictionary.module.css";
 
 const Dictionary = () => {
     const [phrase, setPhrase] = useState('');
@@ -23,11 +25,18 @@ const Dictionary = () => {
         setPhrase(input);
     }, []);
 
-    return <>
+    return (<>
         <SearchInput onChange={onChangeInput} />
-        {loading ? 'Loading...' :
-            <WordList words={filteredWords} />}
-    </>
+
+        {loading ? (
+            <div className={styles['loader-container']}>
+                <Loader />
+            </div>) : (
+            <div className={styles['results-container']}>
+                <WordList words={filteredWords} />
+            </div>)}
+
+    </>)
 }
 
 export default Dictionary;
