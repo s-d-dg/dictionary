@@ -15,19 +15,21 @@ const DictionarySlice = createSlice({
     loadWords(state) {
       state.loading = true;
     },
-    loadWordsSuccess(state, action: PayloadAction<Dictionary>) {
+    loadWordsSuccess(
+      state,
+      action: PayloadAction<{ dictionary: Dictionary; allWords: string[] }>
+    ) {
       state.loading = false;
-      state.dictionary = action.payload;
+      state.dictionary = action.payload.dictionary;
 
+      // Get possibly saved data from localStorage on first load
+      const phrase = localStorage.getItem("phrase");
+      state.phrase = phrase || "";
 
-      // Get possibly saved data from localStorage on first load 
-      const phrase = localStorage.getItem('phrase');
-      state.phrase = phrase || '';
-
-      const stringifiedFilteredWords = localStorage.getItem('filteredWords');
+      const stringifiedFilteredWords = localStorage.getItem("filteredWords");
       if (stringifiedFilteredWords !== null) {
         state.filteredWords = JSON.parse(stringifiedFilteredWords);
-      } 
+      }
     },
     loadWordsFailure(state, action: PayloadAction<string>) {
       state.loading = false;
@@ -35,22 +37,22 @@ const DictionarySlice = createSlice({
     },
     filterBy(state, action: PayloadAction<string>) {
       const phrase = action.payload;
-      localStorage.setItem('phrase', phrase);
+      localStorage.setItem("phrase", phrase);
       state.phrase = phrase;
       state.loading = true;
     },
     filterBySuccess(state, action: PayloadAction<string[]>) {
       state.loading = false;
       state.filteredWords = action.payload;
-      localStorage.setItem('filteredWords', JSON.stringify(action.payload));
+      localStorage.setItem("filteredWords", JSON.stringify(action.payload));
     },
     filterByFailure(state, action: PayloadAction<string>) {
       state.filteredWords = [];
       state.loading = false;
       state.error = action.payload;
 
-      localStorage.removeItem('phrase');
-      localStorage.removeItem('filteredWords');
+      localStorage.removeItem("phrase");
+      localStorage.removeItem("filteredWords");
     },
   },
 });

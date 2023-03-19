@@ -3,7 +3,7 @@ import { allWordsActions } from "./index";
 import wordsObj from "../../assets/data/words_dictionary.json";
 import { Dictionary, dictionaryObject } from "./model";
 
-const getWords = async (): Promise<Dictionary> => {
+const getWords = async (): Promise<{dictionary: Dictionary, allWords: string[]}> => {
   return new Promise((resolve, reject) => {
     try {
       const words = Object.keys(wordsObj);
@@ -18,7 +18,7 @@ const getWords = async (): Promise<Dictionary> => {
         }
       }
 
-      resolve(dictionaryObj);
+      resolve({dictionary: dictionaryObj, allWords: words});
     } catch (error) {
       console.error(error);
       reject(new Error("Loading words failed !"));
