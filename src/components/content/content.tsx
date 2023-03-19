@@ -1,24 +1,19 @@
-import { useState, useEffect } from 'react';
-import { getWords } from '../../store/words-service';
-import SearchInput from '../search-input/search-input';
+import { useEffect } from 'react';
+import { useDispatch } from "react-redux";
+import { allWordsActions } from '../../store/dictionary';
+import { loadAllWords } from '../../store/dictionary/service';
 import styles from './content.module.css';
+import Dictionary from './dictionary/dictionary';
 
 function Content() {
-    const [words, setWords] = useState<string[]>([]);
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        const dictionaryWords = getWords();
-        setWords(dictionaryWords);
+        dispatch(allWordsActions.loadWords());
+        loadAllWords()(dispatch);
     }, []);
 
-    return <>
-        <SearchInput />
-        {!words.length ? 'Loading....' :
-            (<ul>
-                {words.map(word => (<li key={word}>{word}</li>))}
-            </ul>)
-        }
-    </>
+    return <Dictionary />
 }
 
 export default Content;
