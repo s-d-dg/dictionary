@@ -14,9 +14,7 @@ const getWords = async (): Promise<Dictionary> => {
         if (!Object.keys(dictionaryObj).includes(word.charAt(0))) {
           console.error(`Dataset includes incorrect data: ${word}`);
         } else {
-          if (dictionaryObj[`${word.charAt(0)}`].length <= 5000) {
-            dictionaryObj[`${word.charAt(0)}`].push(word);
-          }
+          dictionaryObj[`${word.charAt(0)}`].push(word);
         }
       }
 
@@ -69,9 +67,33 @@ async function filterBy(phrase: string, dictionary: any): Promise<string[]> {
     try {
       const firstLetter = phrase.charAt(0);
       const items = dictionary[`${firstLetter}`] as string[];
-      return resolve(items.filter((item) => item.includes(phrase)));
+    
+      const regex = getRegexFromPhrase(phrase);
+      return resolve(items.filter((item) => item.match(regex)));
     } catch (error) {
       reject(error);
     }
   });
+}
+
+
+function getRegexFromPhrase(phrase: string): RegExp {
+  const phraseParts = phrase.replaceAll('*', ',*,').split(',');
+
+  if (phraseParts.length === 1) {
+    return new RegExp(`^(${phrase})(\w+)?`);
+  }
+
+  const regExpString = phraseParts.reduce((acc, curr) => {
+    let nextPart;
+    if(curr === '*') {
+      nextPart = '\\w';
+    } else {
+      nextPart = `(${curr})`;
+    }
+    return acc + nextPart;
+  }, '^');
+
+  const completedRegExp = regExpString + '(\w+)?';
+  return new RegExp(completedRegExp);
 }
