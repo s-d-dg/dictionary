@@ -22,6 +22,12 @@ function SearchInput({ onChange }: SearchInputPropTypes) {
     };
 
     const isValid = (value: string) => {
+        if (value.charAt(0) === '*') {
+            // Requirement is not specified in task, however
+            // I had to make assumption because of implementation of dictionary obj in the store. 
+            setError("Word can not start with wild card");
+            return false;
+        }
         if (value.split('').every(v => allowedCharacters.includes(v))) {
             setError(null);
             return true;
