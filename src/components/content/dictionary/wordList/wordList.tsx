@@ -1,20 +1,12 @@
 
 interface WordListPropTypes {
-    words: string[],
-    loading: boolean
+    words: string[]
 }
 
-const WordList = ({ words, loading }: WordListPropTypes) => {
-
-    
-
-    return <>
-        {loading ? 'Loading....' :
-            (<ul>
-                {words.map((word: string) => (<li key={word}>{word}</li>))}
-            </ul>)
-        }
-    </>
+const WordList = ({ words }: WordListPropTypes) => {
+    return <ul>
+        {words.map((word: string) => (<li key={word}>{word}</li>))}
+    </ul>
 }
 
 export default WordList;

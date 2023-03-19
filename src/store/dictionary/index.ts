@@ -25,7 +25,17 @@ const DictionarySlice = createSlice({
     },
     filterBy(state, action: PayloadAction<string>) {
       const phrase = action.payload;
-      state.filteredWords = filterBy(phrase, state.dictionary);
+      state.phrase = phrase;
+      state.loading = true;
+    },
+    filterBySuccess(state, action: PayloadAction<string[]>) {
+      state.loading = false;
+      state.filteredWords = action.payload;
+    },
+    filterByFailure(state, action: PayloadAction<string>) {
+      state.filteredWords = [];
+      state.loading = false;
+      state.error = action.payload;
     },
   },
 });
@@ -33,15 +43,3 @@ const DictionarySlice = createSlice({
 export const allWordsActions = DictionarySlice.actions;
 
 export default DictionarySlice;
-
-
-
-function filterBy(phrase: string, dictionary: any): string[] {
-  if (phrase === "") {
-    return [];
-  }
-  const firstLetter = phrase.charAt(0);
-
-  const items = dictionary[`${firstLetter}`] as string[];
-  return items.filter((item) => item.includes(phrase));
-}

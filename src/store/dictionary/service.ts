@@ -14,10 +14,7 @@ const getWords = async (): Promise<Dictionary> => {
         if (!Object.keys(dictionaryObj).includes(word.charAt(0))) {
           console.error(`Dataset includes incorrect data: ${word}`);
         } else {
-          // temporary 'optimization'
-          if (dictionaryObj[`${word.charAt(0)}`].length <= 500) {
-            dictionaryObj[`${word.charAt(0)}`].push(word);
-          }
+          dictionaryObj[`${word.charAt(0)}`].push(word);
         }
       }
 
@@ -42,3 +39,37 @@ export const loadAllWords = () => {
     }
   };
 };
+
+export const filterByPhrase = (phrase: string, dictionary: any) => {
+  return async (dispatch: any) => {
+    try {
+      const filteredWords = await filterBy(phrase, dictionary);
+      dispatch(allWordsActions.filterBySuccess(filteredWords));
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        dispatch(allWordsActions.filterByFailure(error.message));
+      }
+      dispatch(
+        allWordsActions.filterByFailure(
+          `Error during filtering by phrase: ${phrase}!`
+        )
+      );
+    }
+  };
+};
+
+async function filterBy(phrase: string, dictionary: any): Promise<string[]> {
+  return new Promise((resolve, reject) => {
+    if (phrase === "") {
+      resolve([]);
+    }
+
+    try {
+      const firstLetter = phrase.charAt(0);
+      const items = dictionary[`${firstLetter}`] as string[];
+      return resolve(items.filter((item) => item.includes(phrase)));
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
