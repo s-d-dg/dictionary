@@ -67,7 +67,7 @@ async function filterBy(phrase: string, dictionary: any): Promise<string[]> {
     try {
       const firstLetter = phrase.charAt(0);
       const items = dictionary[`${firstLetter}`] as string[];
-    
+
       const regex = getRegexFromPhrase(phrase);
       return resolve(items.filter((item) => item.match(regex)));
     } catch (error) {
@@ -76,9 +76,8 @@ async function filterBy(phrase: string, dictionary: any): Promise<string[]> {
   });
 }
 
-
 function getRegexFromPhrase(phrase: string): RegExp {
-  const phraseParts = phrase.replaceAll('*', ',*,').split(',');
+  const phraseParts = phrase.replaceAll("*", ",*,").split(",");
 
   if (phraseParts.length === 1) {
     return new RegExp(`^(${phrase})(\w+)?`);
@@ -86,14 +85,14 @@ function getRegexFromPhrase(phrase: string): RegExp {
 
   const regExpString = phraseParts.reduce((acc, curr) => {
     let nextPart;
-    if(curr === '*') {
-      nextPart = '\\w';
+    if (curr === "*") {
+      nextPart = "\\w";
     } else {
       nextPart = `(${curr})`;
     }
     return acc + nextPart;
-  }, '^');
+  }, "^");
 
-  const completedRegExp = regExpString + '(\w+)?';
+  const completedRegExp = regExpString + "(w+)?";
   return new RegExp(completedRegExp);
 }
