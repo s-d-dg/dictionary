@@ -13,14 +13,6 @@ const allowedCharacters = [...alphabet, '*'];
 function SearchInput({ onChange }: SearchInputPropTypes) {
     const [error, setError] = useState<null | string>(null);
 
-    const changeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value.toLowerCase();
-
-        if (isValid(value)) {
-            onChange(event.target.value);
-        }
-    };
-
     const isValid = (value: string) => {
         if (value.charAt(0) === '*') {
             // Requirement is not specified in task, however
@@ -36,6 +28,14 @@ function SearchInput({ onChange }: SearchInputPropTypes) {
         setError("Incorrect value, input can only contain alphabetic values and ' * ' ");
         return false;
     }
+
+    const changeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value.toLowerCase();
+
+        if (isValid(value)) {
+            onChange(event.target.value);
+        }
+    };
 
     const debouncedChangeHandler = useCallback(
         debounce(changeHandler, 300)
