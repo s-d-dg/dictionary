@@ -1,5 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AllWordsDictionary, Dictionary, dictionaryObject } from "./model";
+import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+import { AllWordsDictionary, dictionaryObject } from "./model";
+import { getAllWords } from "./service";
 
 const initialState: AllWordsDictionary = {
   loading: false,
@@ -8,33 +9,22 @@ const initialState: AllWordsDictionary = {
   filteredWords: [],
 };
 
+export const fetchAllWords = createAsyncThunk('Dictionary/fetchAllWords', async () => {
+  try {
+    const allWords = await getAllWords();
+    return Promise.resolve(allWords);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return Promise.reject(error.message);
+    }
+    return Promise.reject("Something went wrong :( ");
+  }
+});
+
 const DictionarySlice = createSlice({
   name: "Dictionary",
   initialState,
   reducers: {
-    loadWords(state) {
-      state.loading = true;
-    },
-    loadWordsSuccess(
-      state,
-      action: PayloadAction<{ dictionary: Dictionary; allWords: string[] }>
-    ) {
-      state.loading = false;
-      state.dictionary = action.payload.dictionary;
-
-      // Get possibly saved data from localStorage on first load
-      const phrase = localStorage.getItem("phrase");
-      state.phrase = phrase || "";
-
-      const stringifiedFilteredWords = localStorage.getItem("filteredWords");
-      if (stringifiedFilteredWords !== null) {
-        state.filteredWords = JSON.parse(stringifiedFilteredWords);
-      }
-    },
-    loadWordsFailure(state, action: PayloadAction<string>) {
-      state.loading = false;
-      state.error = action.payload;
-    },
     filterBy(state, action: PayloadAction<string>) {
       const phrase = action.payload;
       localStorage.setItem("phrase", phrase);
@@ -54,6 +44,29 @@ const DictionarySlice = createSlice({
       localStorage.removeItem("phrase");
       localStorage.removeItem("filteredWords");
     },
+  },
+  extraReducers(builder) {
+    builder
+      .addCase(fetchAllWords.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(fetchAllWords.fulfilled, (state, action) => {
+        state.loading = false;
+        state.dictionary = action.payload.dictionary;
+  
+        // Get possibly saved data from localStorage on first load
+        const phrase = localStorage.getItem("phrase");
+        state.phrase = phrase || "";
+  
+        const stringifiedFilteredWords = localStorage.getItem("filteredWords");
+        if (stringifiedFilteredWords !== null) {
+          state.filteredWords = JSON.parse(stringifiedFilteredWords);
+        }
+      })
+      .addCase(fetchAllWords.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
   },
 });
 
