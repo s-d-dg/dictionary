@@ -1,16 +1,15 @@
 import { useEffect } from 'react';
 import { useDispatch } from "react-redux";
-import { allWordsActions } from '../../store/dictionary';
-import { loadAllWords } from '../../store/dictionary/service';
+import { allWordsActions, fetchAllWords } from '../../store/dictionary';
 import styles from './content.module.css';
 import Dictionary from './dictionary/dictionary';
+import {ThunkDispatch} from "@reduxjs/toolkit";
 
 function Content() {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
     useEffect(() => {
-        dispatch(allWordsActions.loadWords());
-        loadAllWords()(dispatch);
+        dispatch(fetchAllWords());
     }, []);
 
     return <Dictionary />

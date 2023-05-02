@@ -3,7 +3,7 @@ import { allWordsActions } from "./index";
 import wordsObj from "../../assets/data/words_dictionary.json";
 import { Dictionary, dictionaryObject } from "./model";
 
-const getWords = async (): Promise<{dictionary: Dictionary, allWords: string[]}> => {
+export const getAllWords = async (): Promise<{dictionary: Dictionary, allWords: string[]}> => {
   return new Promise((resolve, reject) => {
     try {
       const words = Object.keys(wordsObj);
@@ -17,27 +17,12 @@ const getWords = async (): Promise<{dictionary: Dictionary, allWords: string[]}>
           dictionaryObj[`${word.charAt(0)}`].push(word);
         }
       }
-
       resolve({dictionary: dictionaryObj, allWords: words});
     } catch (error) {
       console.error(error);
       reject(new Error("Loading words failed !"));
     }
   });
-};
-
-export const loadAllWords = () => {
-  return async (dispatch: any) => {
-    try {
-      const allWords = await getWords();
-      dispatch(allWordsActions.loadWordsSuccess(allWords));
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        dispatch(allWordsActions.loadWordsFailure(error.message));
-      }
-      dispatch(allWordsActions.loadWordsFailure("Something went wrong :( "));
-    }
-  };
 };
 
 export const filterByPhrase = (phrase: string, dictionary: any) => {
